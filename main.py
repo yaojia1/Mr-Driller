@@ -47,6 +47,12 @@ while True:
                 dril1.fall()
                 for sp in collide_list2:
                     if sp.rect.left<dril1.rect.left+16<sp.rect.left+50:
+                        if sp.color == "crystal":
+                            if sp.rect.top % 50 == 0 and sp.stoptime == 0:
+                                sp.stoptime = 2.5  # 3秒后stoptime=-0.1
+                                break
+                            else:
+                                break
                         drillbrick(sp)
                         spdy=0
                         break
@@ -59,6 +65,12 @@ while True:
                         if sp.life>0:
                             sp.life-=1
                         else:
+                            if sp.color == "crystal":
+                                if sp.rect.top % 50 == 0 and sp.stoptime == 0:
+                                    sp.stoptime = 2.5  # 3秒后stoptime=-0.1
+                                    break
+                                else:
+                                    break
                             drillbrick(sp)
                         break
             if event.key == pygame.K_RIGHT:
@@ -70,6 +82,12 @@ while True:
                         if sp.life>0:
                             sp.life-=1
                         else:
+                            if sp.color == "crystal":
+                                if sp.rect.top % 50 == 0 and sp.stoptime == 0:
+                                    sp.stoptime = 2.5  # 3秒后stoptime=-0.1
+                                    break
+                                else:
+                                    break
                             drillbrick(sp)
                         break
     dril1.move(spdx,spdy)
@@ -79,11 +97,11 @@ while True:
             if sp.rect.top+51>=dril1.rect.top>=sp.rect.top+44:
                 spdy=0
                 break
+    mergebrick(tic)
     map1.brickGroup.update(tic)
     map1.brickGroup.draw(screen)
     screen.blit(dril1.image, dril1.rect)
     if dril1.rect.top<560: dril1.fall()
-    mergebrick(tic)
     pygame.display.update()
     if tic>=1:
         tic=0
