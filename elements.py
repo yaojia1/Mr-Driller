@@ -71,9 +71,18 @@ class Brick(pygame.sprite.Sprite):
                 gg = self.mel  # 找到尊在的那个组
             if gg.fallable==0:#正在下落不能打扰
                 kll=0
+
                 for sss in gg.mapn:
+                    if sss.rect.top + 5 <= dril1.rect.top <= sss.rect.top + 50:
+                        if sss.rect.left <= dril1.rect.left + 16 <= sss.rect.left + 50:
+                            dril1.life -= 1
+                            dril1.air = 100
+                            dril1.rect.top, dril1.rect.left = 200, 250
+                            for br in map1.brickGroup:
+                                br.rect.top += dril1.level
+                            dril1.level = 0
                     sss.rect.top += 2
-                    if (sss.rect.top+dril1.level) % 50 == 0:
+                if (sss.rect.top+dril1.level) % 50 == 0:
                         kll = 1         # 下落到50倍数了
                 if kll:
                     gg.fallable=1#可判断是否下咯
@@ -100,6 +109,13 @@ class Brick(pygame.sprite.Sprite):
                     self.sta=1
                     return 0
         if self.stoptime==0:
+            if self.rect.top + 5 <= dril1.rect.top <= self.rect.top + 50:
+                if self.rect.left <= dril1.rect.left + 16 <= self.rect.left + 50:
+                    dril1.life -= 1
+                    dril1.rect.top, dril1.rect.left = 200, 250
+                    for br in map1.brickGroup:
+                        br.rect.top += dril1.level
+                    dril1.level = 0
             self.rect.top += 2
             self.sta = 0
     def melt(self):
