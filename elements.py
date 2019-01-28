@@ -42,6 +42,14 @@ class Brick(pygame.sprite.Sprite):
             self.life=5
         else:self.life=2
     def fall(self,tics):
+        if self.color == "crystal" :
+            if self.stoptime > 0:
+                self.ttime(tics)
+                return 0  # 两秒后stoptime=-0.1
+            if self.stoptime < 0:
+                print("透明色消除")
+                drillbrick(self)
+                return 0
         if self.rect.top==550:#到底了
             self.sta=1
             self.fuck=1
@@ -51,14 +59,6 @@ class Brick(pygame.sprite.Sprite):
                     lala.fuck=1
             return 0
         if self.fuck==1:return 0 #到底了
-        if self.color == "crystal" and self.mel!=1:
-            if self.stoptime > 0:
-                self.ttime(tics)
-                return 0  # 两秒后stoptime=-0.1
-            if self.stoptime < 0:
-                print("透明色消除")
-                drillbrick(self)
-                return 0
         if self.mel:
             if self.mel == 1:
                 return 0
@@ -75,11 +75,6 @@ class Brick(pygame.sprite.Sprite):
                 return 0
             else:
                 fall123=1#融合在fall
-                '''if spr.stoptime!=0:
-                         self.stoptime=spr.stoptime
-                         spr.stoptime=0
-                         return 0
-                         '''
                 for spr in gg.mapn:  # 组里的每一个石块
                     if spr.rect.top+25 < self.rect.top and spr.rect.left==self.rect.left: continue
                     test_list = pygame.sprite.spritecollide(spr, map1.brickGroup, False)  # spr相交的石块
@@ -141,18 +136,6 @@ class Mapnn():
         self.color=ga.color
         self.num=1
     def aadd(self,gb):
-        if gb.mel!=0:
-            tt=0
-            for spp in meltgroup:
-                if pygame.sprite.Group.has(spp.mapn,gb):
-                    for g in spp.mapn:
-                        self.mapn.add(g)
-                        g.mel=1
-                        self.num+=1
-                    spp.mapn.empty  # 清空
-                    meltgroup.pop(tt)
-                    return 0
-                tt+=1
         self.mapn.add(gb)
         gb.mel=1
         self.num+=1
@@ -235,16 +218,43 @@ def mergebrick(tics):
                 if pygame.sprite.Group.has(spp.mapn, jiaocha):
                     pass
                 else:
-                    if spp.color == jiaocha.color:
+                    aaa=0
+                    if spp.color == jiaocha.color:#是否可以融合
                         for bb in spp.mapn:
                             if bb.rect.top == jiaocha.rect.top:
                                 if bb.rect.left + 50 == jiaocha.rect.left or bb.rect.left - 50 == jiaocha.rect.left:
-                                    spp.aadd(jiaocha)
+                                    aaa=1
                             if bb.rect.left == jiaocha.rect.left:
                                 if bb.rect.top == jiaocha.rect.top + 50 or bb.rect.top == jiaocha.rect.top - 50:
-                                    spp.aadd(jiaocha)
+                                    aaa=1
+                    if aaa:
+                        if jiaocha.mel:#两个组
+                            if jiaocha.mel == 1:
+                                tt = 0
+                                for gg in meltgroup:
+                                    if pygame.sprite.Group.has(spp.mapn, jiaocha):
+                                        break
+                                    tt+=1
+                                print("111111")
+                            else:
+                                print("222222222222")
+                                gg=jiaocha.mel
+                                tt = 0
+                                for sss in meltgroup:
+                                    if sss == gg: break
+                                    tt += 1
+                            for g in gg.mapn:
+                                spp.aadd(g)
+                            gg.mapn.empty  # 清空
+                            gg.color = 0
+                            meltgroup.pop(tt)
+                            print("两个组融合@@@@@@@@@@@@@@@@@@@@@@@",tt,meltgroup)
+                            return 0
+                        else:#单个的
+                            spp.aadd(jiaocha)
         if spp.num >= 4:  # 大于4
             if spp.color == "crystal":
+                print("透明色数量：",spp.num)
                 spp.num=-55
                 for br in spp.mapn:
                     if br.mel!=1:
@@ -267,19 +277,20 @@ def drillbrick(sp):
     else:
         if sp.color == "brown":
             dril1.air -= 20
-        ssss=0
-        for gro in meltgroup:
-            if pygame.sprite.Group.has(gro.mapn,sp):
-                if sp.color == "air":
-                    dril1.air += 20*gro.num
-                for yichu in gro.mapn:
-                    map1.brickGroup.remove(yichu)
-                dril1.score+=gro.num
-                gro.mapn.empty  # 清空
-                print(dril1.score)
-                meltgroup.pop(ssss)
-                return 0
-            ssss+=1
+        if sp.mel!=0:
+            ssss = 0
+            for gro in meltgroup:
+                if pygame.sprite.Group.has(gro.mapn, sp):
+                    if sp.color == "air":
+                        dril1.air += 20 * gro.num
+                    for yichu in gro.mapn:
+                        map1.brickGroup.remove(yichu)
+                    dril1.score += gro.num
+                    gro.mapn.empty  # 清空
+                    print(dril1.score)
+                    meltgroup.pop(ssss)
+                    return 0
+                ssss += 1
         if sp.color=="air":
             dril1.air+=20
         map1.brickGroup.remove(sp)
