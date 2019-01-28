@@ -50,7 +50,7 @@ class Brick(pygame.sprite.Sprite):
                 print("透明色消除")
                 drillbrick(self)
                 return 0
-        if self.rect.top>=550:#到底了
+        if self.rect.top>=1700:#到底了
             self.sta=1
             self.fuck=1
             if self.mel!=1 and self.mel!=0:
@@ -72,6 +72,14 @@ class Brick(pygame.sprite.Sprite):
             if gg.fallable==0:#正在下落不能打扰
                 kll=0
                 for sss in gg.mapn:
+                    if sss.rect.top+5<=dril1.rect.top<=sss.rect.top+50:
+                        if sss.rect.left<=dril1.rect.left+16<=sss.rect.left+50:
+                            dril1.life-=1
+                            dril1.air=100
+                            dril1.rect.top,dril1.rect.left=200,250
+                            for br in map1.brickGroup:
+                                br.rect.top += dril1.level
+                            dril1.level=0
                     sss.rect.top += 2
                     if sss.rect.top % 50 == 0:
                         kll = 1         # 下落到50倍数了
@@ -100,12 +108,19 @@ class Brick(pygame.sprite.Sprite):
                     self.sta=1
                     return 0
         if self.stoptime==0:
+            if self.rect.top + 5 <= dril1.rect.top <= self.rect.top + 50:
+                if self.rect.left <= dril1.rect.left + 16 <= self.rect.left + 50:
+                    dril1.life -= 1
+                    dril1.rect.top, dril1.rect.left = 200, 250
+                    for br in map1.brickGroup:
+                        br.rect.top += dril1.level
+                    dril1.level = 0
             self.rect.top += 2
             self.sta = 0
     def melt(self):
         if self.color=='white':
             return 0
-        if self.sta:return 0
+        #if self.sta==0:return 0
         if self.mel:return 0
         collide_list = pygame.sprite.spritecollide(self,map1.brickGroup, False)
         for sp in collide_list:
@@ -150,13 +165,14 @@ class Map():
       # 初始化砖块群组
       self.brickGroup=pygame.sprite.Group()
 
-      XY = [(x,y) for x in range(4) for y in range(20)]
+      XY = [(x,y) for x in range(11) for y in range(30)]
       for x,y in XY:
               # 实例化砖块类对象
               self.brick=Brick(random.choice(['red','blue','green','yellow','brown','white','crystal','air']))
               # 生砖块的位置
-              self.brick.rect.left,self.brick.rect.top=3+x*50,600-y*50# 每循环一次自动将动画添加到精灵组（下同）
+              self.brick.rect.left,self.brick.rect.top=3+x*50,250+y*50# 每循环一次自动将动画添加到精灵组（下同）
               self.brickGroup.add(self.brick)
+'''
       XY2 = [(x, y) for x in range(4,7) for y in range(6)]
       for x,y in XY2:
               # 实例化砖块类对象
@@ -171,8 +187,10 @@ class Map():
               # 生砖块的位置
               self.brick.rect.left,self.brick.rect.top=3+x*50,600-y*50# 每循环一次自动将动画添加到精灵组（下同）
               self.brickGroup.add(self.brick)
+       '''
 
 class Drillers(pygame.sprite.Sprite):
+    level=0
     life=3
     air=100
     image = pygame.image.load(foo('drill'))
@@ -198,7 +216,13 @@ class Drillers(pygame.sprite.Sprite):
              #   if sp.rect.left + 50 > self.rect.left > sp.rect.left + 25: self.rect.left = sp.rect.left  # 排左
               #  if sp.rect.left < self.rect.left + 32 < sp.rect.left + 25: self.rect.left = sp.rect.left - 32  # 排右
                 #self.rect.top=sp.rect.top-39
-        if self.rect.top>=560:return 0
+        if self.rect.top>=350:
+            if self.rect.top+self.level>=1560:
+                print("WIN")
+                return 0
+            levelup(2)
+        if self.rect.top<200:
+            levelup(2)
         self.rect.top+=self.speed
     def update(self,event):
         self.fall()
@@ -211,8 +235,14 @@ def die(dril1):
         dril1.life-=1
         dril1.air=100
     if dril1.life==0:
+        print("GAME OVER")
         pygame.quit()
         sys.exit()
+
+def lifepoint():pass
+
+def gameover(screen):
+    pass
 
 def mergebrick(tics):
     ii=0
@@ -237,7 +267,7 @@ def mergebrick(tics):
                             if jiaocha.mel == 1:
                                 tt = 0
                                 for gg in meltgroup:
-                                    if pygame.sprite.Group.has(spp.mapn, jiaocha):
+                                    if pygame.sprite.Group.has(gg.mapn, jiaocha):
                                         break
                                     tt+=1
                                 print("111111")
@@ -300,6 +330,12 @@ def drillbrick(sp):
             dril1.air+=20
         map1.brickGroup.remove(sp)
 
+def levelup(vv):
+    dril1.rect.top -= vv
+    dril1.level += vv
+    for br in map1.brickGroup:
+        br.rect.top-=vv
+
 map1=Map()
 dril1=Drillers()
-dril1.rect.left,dril1.rect.top=250,201
+dril1.rect.left,dril1.rect.top=250,200
