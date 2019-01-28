@@ -105,7 +105,7 @@ class Brick(pygame.sprite.Sprite):
     def melt(self):
         if self.color=='white':
             return 0
-        if self.sta:return 0
+        #if self.sta:return 0
         if self.mel:return 0
         collide_list = pygame.sprite.spritecollide(self,map1.brickGroup, False)
         for sp in collide_list:
@@ -237,7 +237,7 @@ def mergebrick(tics):
                             if jiaocha.mel == 1:
                                 tt = 0
                                 for gg in meltgroup:
-                                    if pygame.sprite.Group.has(spp.mapn, jiaocha):
+                                    if pygame.sprite.Group.has(gg.mapn, jiaocha):
                                         break
                                     tt+=1
                                 print("111111")
