@@ -44,11 +44,10 @@ while True:
                     for sp in collide_list2:
                         if sp.rect.top > dril1.rect.top + 35 and dril1.rect.top < sp.rect.top: spdy = -5
             if event.key == pygame.K_DOWN:
-                dril1.fall()
                 for sp in collide_list2:
                     if sp.rect.left<dril1.rect.left+16<sp.rect.left+50:
                         if sp.color == "crystal":
-                            if sp.rect.top % 50 == 0 and sp.stoptime == 0:
+                            if (sp.rect.top+dril1.level) % 50 == 0 and sp.stoptime == 0:
                                 sp.stoptime = 2.5  # 3秒后stoptime=-0.1
                                 break
                             else:
@@ -66,7 +65,7 @@ while True:
                             sp.life-=1
                         else:
                             if sp.color == "crystal":
-                                if sp.rect.top % 50 == 0 and sp.stoptime == 0:
+                                if (sp.rect.top+dril1.level) % 50 == 0 and sp.stoptime == 0:
                                     sp.stoptime = 2.5  # 3秒后stoptime=-0.1
                                     break
                                 else:
@@ -83,7 +82,7 @@ while True:
                             sp.life-=1
                         else:
                             if sp.color == "crystal":
-                                if sp.rect.top % 50 == 0 and sp.stoptime == 0:
+                                if (sp.rect.top+dril1.level) % 50 == 0 and sp.stoptime == 0:
                                     sp.stoptime = 2.5  # 3秒后stoptime=-0.1
                                     break
                                 else:
@@ -102,6 +101,7 @@ while True:
     map1.brickGroup.draw(screen)
     screen.blit(dril1.image, dril1.rect)
     if dril1.rect.top<560: dril1.fall()
+    levelup()
     pygame.display.update()
     if tic>=1:
         tic=0

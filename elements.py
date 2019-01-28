@@ -50,7 +50,7 @@ class Brick(pygame.sprite.Sprite):
                 print("透明色消除")
                 drillbrick(self)
                 return 0
-        if self.rect.top>=550:#到底了
+        if self.rect.top>=1200-dril1.level:#到底了
             self.sta=1
             self.fuck=1
             if self.mel!=1 and self.mel!=0:
@@ -73,7 +73,7 @@ class Brick(pygame.sprite.Sprite):
                 kll=0
                 for sss in gg.mapn:
                     sss.rect.top += 2
-                    if sss.rect.top % 50 == 0:
+                    if (sss.rect.top+dril1.level) % 50 == 0:
                         kll = 1         # 下落到50倍数了
                 if kll:
                     gg.fallable=1#可判断是否下咯
@@ -130,7 +130,7 @@ class Brick(pygame.sprite.Sprite):
 
     def update(self,tics):
         self.fall(tics)
-        if self.rect.top%50==0:self.melt()
+        if (self.rect.top+dril1.level)%50==0:self.melt()
 
 class Mapnn():
     stopp=1
@@ -150,30 +150,16 @@ class Map():
       # 初始化砖块群组
       self.brickGroup=pygame.sprite.Group()
 
-      XY = [(x,y) for x in range(4) for y in range(20)]
+      XY = [(x,y) for x in range(11) for y in range(20)]
       for x,y in XY:
               # 实例化砖块类对象
               self.brick=Brick(random.choice(['red','blue','green','yellow','brown','white','crystal','air']))
               # 生砖块的位置
-              self.brick.rect.left,self.brick.rect.top=3+x*50,600-y*50# 每循环一次自动将动画添加到精灵组（下同）
+              self.brick.rect.left,self.brick.rect.top=3+x*50,250+y*50# 每循环一次自动将动画添加到精灵组（下同）
               self.brickGroup.add(self.brick)
-      XY2 = [(x, y) for x in range(4,7) for y in range(6)]
-      for x,y in XY2:
-              # 实例化砖块类对象
-              self.brick=Brick(random.choice(['red','blue','green','yellow','brown','white','crystal','air']))
-              # 生砖块的位置
-              self.brick.rect.left,self.brick.rect.top=3+x*50,600-y*50# 每循环一次自动将动画添加到精灵组（下同）
-              self.brickGroup.add(self.brick)
-      XY3 = [(x, y) for x in range(7,11) for y in range(20)]
-      for x,y in XY3:
-              # 实例化砖块类对象
-              self.brick=Brick(random.choice(['red','blue','green','yellow','brown','white','crystal','air']))
-              # 生砖块的位置
-              self.brick.rect.left,self.brick.rect.top=3+x*50,600-y*50# 每循环一次自动将动画添加到精灵组（下同）
-              self.brickGroup.add(self.brick)
-
 class Drillers(pygame.sprite.Sprite):
     life=3
+    level=0
     air=100
     image = pygame.image.load(foo('drill'))
     rect = image.get_rect()
@@ -198,7 +184,6 @@ class Drillers(pygame.sprite.Sprite):
              #   if sp.rect.left + 50 > self.rect.left > sp.rect.left + 25: self.rect.left = sp.rect.left  # 排左
               #  if sp.rect.left < self.rect.left + 32 < sp.rect.left + 25: self.rect.left = sp.rect.left - 32  # 排右
                 #self.rect.top=sp.rect.top-39
-        if self.rect.top>=560:return 0
         self.rect.top+=self.speed
     def update(self,event):
         self.fall()
@@ -300,6 +285,19 @@ def drillbrick(sp):
             dril1.air+=20
         map1.brickGroup.remove(sp)
 
+def levelup():
+    if dril1.rect.top>=310:
+        for gr in map1.brickGroup:
+            gr.rect.top -= 2
+        dril1.rect.top -= 2
+        dril1.level += 2
+    if dril1.rect.top<200:
+        for gr in map1.brickGroup:
+            gr.rect.top += 2
+        dril1.rect.top += 2
+        dril1.level -= 2
+
+
 map1=Map()
 dril1=Drillers()
-dril1.rect.left,dril1.rect.top=250,201
+dril1.rect.left,dril1.rect.top=250,200
