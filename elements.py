@@ -50,7 +50,7 @@ class Brick(pygame.sprite.Sprite):
                 print("透明色消除")
                 drillbrick(self)
                 return 0
-        if self.rect.top==550:#到底了
+        if self.rect.top>=550:#到底了
             self.sta=1
             self.fuck=1
             if self.mel!=1 and self.mel!=0:
@@ -61,6 +61,11 @@ class Brick(pygame.sprite.Sprite):
         if self.fuck==1:return 0 #到底了
         if self.mel:
             if self.mel == 1:
+                if self.fuck:
+                    for grrr in meltgroup:
+                        if pygame.sprite.Group.has(grrr.mapn, self):
+                            for bbb in grrr.mapn:bbb.fuck=1
+                            return 0
                 return 0
             else:
                 gg = self.mel  # 找到尊在的那个组
