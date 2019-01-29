@@ -10,6 +10,8 @@ spdy = 0
 tic=0
 kkk1,kkk2=0,0
 moveable=1
+my_font = pygame.font.SysFont("arial", 40)
+if not pygame.font: print('Warning, fonts disabled')
 while True:
     die(dril1)
     timepassed=framerate.tick(60)
@@ -100,6 +102,12 @@ while True:
     map1.brickGroup.update(tic)
     map1.brickGroup.draw(screen)
     screen.blit(dril1.image, dril1.rect)
+    text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
+    text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
+    text_fmt3 = my_font.render("LEVEL:" + str(dril1.level), 1, (255, 255, 255))
+    screen.blit(text_fmt,(560,100))
+    screen.blit(text_fmt2, (560, 200))
+    screen.blit(text_fmt3, (560, 300))
     if dril1.rect.top<560: dril1.update()
     levelup()
     pygame.display.update()

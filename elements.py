@@ -1,6 +1,7 @@
 import pygame
 import random
 import sys
+from pygame.font import *
 allblock=0
 meltgroup=[]
 
@@ -23,9 +24,10 @@ def foo(var):
 class Brick(pygame.sprite.Sprite):
     _width = 15
     _height = 15
-    sta=1#可以fall
+    sta=0#可以fall
     stoptime=0
     fuck=0#到底了为1
+    fallingsingle=1
     def ttime(self,tics):
         if tics>=1:
             self.stoptime-=1
@@ -51,11 +53,11 @@ class Brick(pygame.sprite.Sprite):
                 drillbrick(self)
                 return 0
         if self.rect.top>=2200-dril1.level:#到底了
-            self.sta=1
+            #self.sta=1
             self.fuck=1
             if self.mel!=1 and self.mel!=0:
                 for lala in self.mel.mapn:
-                    lala.sta=1
+                    #lala.sta=1
                     lala.fuck=1
             return 0
         if self.fuck==1:return 0 #到底了
@@ -71,7 +73,7 @@ class Brick(pygame.sprite.Sprite):
                 gg = self.mel  # 找到尊在的那个组
             if gg.fallable==0:#正在下落不能打扰
                 kll=0
-
+                gg.statu+=1
                 for sss in gg.mapn:
                     if sss.rect.top + 5 <= dril1.rect.top <= sss.rect.top + 50:
                         if sss.rect.left <= dril1.rect.left + 16 <= sss.rect.left + 50:
@@ -81,6 +83,7 @@ class Brick(pygame.sprite.Sprite):
                             for br in map1.brickGroup:
                                 br.rect.top += dril1.level
                             dril1.level = 0
+                    sss.sta+=1
                     sss.rect.top += 2
                 if (sss.rect.top+dril1.level) % 50 == 0:
                         kll = 1         # 下落到50倍数了
@@ -100,13 +103,15 @@ class Brick(pygame.sprite.Sprite):
                 for sss in gg.mapn:
                     sss.rect.top += 2
                 gg.fallable = 0#没找到托，正在下落
+                gg.statu+=1
                 return 0
         #if融合
         collide_list = pygame.sprite.spritecollide(self, map1.brickGroup, False)
         for sp in collide_list:
             if  self.rect.left==sp.rect.left:
                 if sp.rect.top == self.rect.top + 50:#压住了
-                    self.sta=1
+                    self.melt()
+                    self.fallingsingle=1
                     return 0
         if self.stoptime==0:
             if self.rect.top + 5 <= dril1.rect.top <= self.rect.top + 50:
@@ -117,15 +122,16 @@ class Brick(pygame.sprite.Sprite):
                         br.rect.top += dril1.level
                     dril1.level = 0
             self.rect.top += 2
-            self.sta = 0
+            self.fallingsingle=0
+            self.sta +=1
     def melt(self):
         if self.color=='white':
             return 0
-        #if self.sta:return 0
         if self.mel:return 0
         collide_list = pygame.sprite.spritecollide(self,map1.brickGroup, False)
         for sp in collide_list:
             if sp.color == self.color:
+                if sp.fallingsingle==0:continue
                 rel=0
                 if sp.rect.left + 50 == self.rect.left or sp.rect.left - 50 == self.rect.left :
                     if sp.rect.top==self.rect.top:rel=1
@@ -141,12 +147,8 @@ class Brick(pygame.sprite.Sprite):
                             self.mel.aadd(sp)
                             meltgroup.append(self.mel)
 
-
-
-
     def update(self,tics):
         self.fall(tics)
-        if (self.rect.top+dril1.level)%50==0:self.melt()
 
 class Mapnn():
     stopp=1
@@ -155,11 +157,13 @@ class Mapnn():
         self.mapn = pygame.sprite.Group()
         self.mapn.add(ga)
         self.color=ga.color
+        self.statu=ga.sta#264
         self.num=1
     def aadd(self,gb):
         self.mapn.add(gb)
         gb.mel=1
         self.num+=1
+        self.statu+=gb.sta
 
 class Map():
   def __init__(self):
@@ -224,8 +228,7 @@ def mergebrick(tics):
         pengsp=pygame.sprite.groupcollide(spp.mapn,map1.brickGroup,False,False)
         for keys in pengsp.keys():
             for jiaocha in pengsp[keys]:  # 小于4
-                if pygame.sprite.Group.has(spp.mapn, jiaocha):
-                    pass
+                if pygame.sprite.Group.has(spp.mapn, jiaocha):continue
                 else:
                     aaa=0
                     if spp.color == jiaocha.color:#是否可以融合
@@ -238,6 +241,7 @@ def mergebrick(tics):
                                     aaa=1
                     if aaa:
                         if jiaocha.mel:#两个组
+                            tt=0
                             if jiaocha.mel == 1:
                                 tt = 0
                                 for gg in meltgroup:
@@ -252,16 +256,19 @@ def mergebrick(tics):
                                 for sss in meltgroup:
                                     if sss == gg: break
                                     tt += 1
+                            spp.statu+=gg.statu
                             for g in gg.mapn:
                                 spp.aadd(g)
                             gg.mapn.empty  # 清空
                             gg.color = 0
                             meltgroup.pop(tt)
-                            print("两个组融合@@@@@@@@@@@@@@@@@@@@@@@",tt,meltgroup)
+                            print("两个组融合@@@@@@@@@@@@@@@@@@@@@@@",tt,gg.statu,meltgroup)
                             return 0
                         else:#单个的
+                            if jiaocha.fallingsingle==0:continue
                             spp.aadd(jiaocha)
         if spp.num >= 4:  # 大于4
+            #if spp.statu == 0: continue
             if spp.color == "crystal":
                 print("透明色数量：",spp.num)
                 spp.num=-55
@@ -315,7 +322,6 @@ def levelup():
             gr.rect.top += 2
         dril1.rect.top += 2
         dril1.level -= 2
-
 
 map1=Map()
 dril1=Drillers()
