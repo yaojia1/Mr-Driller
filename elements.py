@@ -50,7 +50,7 @@ class Brick(pygame.sprite.Sprite):
                 print("透明色消除")
                 drillbrick(self)
                 return 0
-        if self.rect.top>=1200-dril1.level:#到底了
+        if self.rect.top>=2200-dril1.level:#到底了
             self.sta=1
             self.fuck=1
             if self.mel!=1 and self.mel!=0:
@@ -166,7 +166,7 @@ class Map():
       # 初始化砖块群组
       self.brickGroup=pygame.sprite.Group()
 
-      XY = [(x,y) for x in range(11) for y in range(20)]
+      XY = [(x,y) for x in range(11) for y in range(40)]#53，206
       for x,y in XY:
               # 实例化砖块类对象
               self.brick=Brick(random.choice(['red','blue','green','yellow','brown','white','crystal','air']))
@@ -185,6 +185,7 @@ class Drillers(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
     def move(self,speedx,speedy):#输入pygame.event.get
         if self.rect.left<=0 and speedx<0:speedx=0
+        if self.rect.left>=518 and speedx>0:speedx=0
         self.rect.left+=speedx
         self.rect.top+=speedy
     def fall(self):#修改
@@ -200,9 +201,11 @@ class Drillers(pygame.sprite.Sprite):
              #   if sp.rect.left + 50 > self.rect.left > sp.rect.left + 25: self.rect.left = sp.rect.left  # 排左
               #  if sp.rect.left < self.rect.left + 32 < sp.rect.left + 25: self.rect.left = sp.rect.left - 32  # 排右
                 #self.rect.top=sp.rect.top-39
+        if self.rect.top + self.level >= 2210:return 0
         self.rect.top+=self.speed
-    def update(self,event):
+    def update(self):
         self.fall()
+        if self.rect.top+self.level>=2210:print("WIN")
 
     #def dill(self)#棕色的氧气减20%
     #def collect(self):#air+20%

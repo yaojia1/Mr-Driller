@@ -20,13 +20,13 @@ while True:
     spdx = 0  # 不动的时候x速度为0
     if key_pressed and moveable:
         if key_pressed[pygame.K_RIGHT]:
-            spdx = 1.5
+            spdx = 2
             for sp in collide_list2:
                 if dril1.rect.left + 16 < sp.rect.left <= dril1.rect.left + 33:  # 右边挡住了
                     if sp.rect.top < dril1.rect.top + 30: spdx = 0  # 腰上边的
             kkk1 += spdx
         if key_pressed[pygame.K_LEFT]:
-            spdx = -1.5
+            spdx = -2
             for sp in collide_list2:
                 if dril1.rect.left + 16 > sp.rect.left + 51 >= dril1.rect.left:
                     if sp.rect.top < dril1.rect.top + 30: spdx = 0  # 腰上边的
@@ -100,7 +100,7 @@ while True:
     map1.brickGroup.update(tic)
     map1.brickGroup.draw(screen)
     screen.blit(dril1.image, dril1.rect)
-    if dril1.rect.top<560: dril1.fall()
+    if dril1.rect.top<560: dril1.update()
     levelup()
     pygame.display.update()
     if tic>=1:
