@@ -239,7 +239,7 @@ def mergebrick(tics):
                             if bb.rect.left == jiaocha.rect.left:
                                 if bb.rect.top == jiaocha.rect.top + 50 or bb.rect.top == jiaocha.rect.top - 50:
                                     aaa=1
-                    if aaa:
+                    if aaa:#可以融合
                         if jiaocha.mel:#两个组
                             tt=0
                             if jiaocha.mel == 1:
@@ -267,25 +267,26 @@ def mergebrick(tics):
                         else:#单个的
                             if jiaocha.fallingsingle==0:continue
                             spp.aadd(jiaocha)
-        if spp.num >= 4:  # 大于4
-            #if spp.statu == 0: continue
-            if spp.color == "crystal":
-                print("透明色数量：",spp.num)
-                spp.num=-55
-                for br in spp.mapn:
-                    if br.mel!=1:
-                            br.stoptime=2.5# 3秒后stoptime=-0.1
-                            print("55555555555555")
-                            break
-                continue
-            for yichu in spp.mapn:
-                map1.brickGroup.remove(yichu)
-            dril1.score += spp.num
-            spp.mapn.empty  # 清空
-            print(dril1.score)
-            meltgroup.pop(ii)
-
+        mergedisappear(spp,ii)
         ii+=1
+
+def mergedisappear(megroup,i):
+        if megroup.num >= 4:  # 大于4
+            # if spp.statu == 0: continue
+            if megroup.color == "crystal" :
+                for bbb in megroup.mapn:
+                    if bbb.mel!=1:
+                        if bbb.stoptime!=0:pass
+                        else:
+                            bbb.stoptime=2.5
+                            print("透明色数量：", megroup.num)
+            for yichu in megroup.mapn:
+                map1.brickGroup.remove(yichu)
+            dril1.score += megroup.num
+            megroup.mapn.empty  # 清空
+            print(dril1.score)
+            meltgroup.pop(i)
+
 
 def drillbrick(sp):
     if sp.life > 0:
