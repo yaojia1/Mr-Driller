@@ -10,16 +10,29 @@ spdy = 0
 tic=0
 kkk1,kkk2=0,0
 moveable=1
-my_font = pygame.font.SysFont("arial", 40)
-if not pygame.font: print('Warning, fonts disabled')
+text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
+text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
+text_fmt3 = my_font.render("LEVEL:" + str(dril1.level), 1, (255, 255, 255))
+text_fmt4 = my_font.render("SCORE:" + str(dril1.score), 1, (255, 255, 255))
 while True:
-    die(dril1)
-    timepassed=framerate.tick(60)
-    tic+=timepassed/1000
+    '''TIME'''
+    timepassed = framerate.tick(60)
+    tic += timepassed / 1000
     screen.fill((0, 0, 0))
+    '''DIE'''
+    if dril1.air<=0:
+        dril1.life-=1
+        dril1.air=100
+        text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
+        text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
+    if dril1.life==0:
+        pygame.quit()
+        sys.exit()
+    '''driller移动+打砖块'''
     collide_list2 = pygame.sprite.spritecollide(dril1, map1.brickGroup, False)
     key_pressed = pygame.key.get_pressed()
     spdx = 0  # 不动的时候x速度为0
+    '''移动'''
     if key_pressed and moveable:
         if key_pressed[pygame.K_RIGHT]:
             spdx = 2
@@ -33,18 +46,19 @@ while True:
                 if dril1.rect.left + 16 > sp.rect.left + 51 >= dril1.rect.left:
                     if sp.rect.top < dril1.rect.top + 30: spdx = 0  # 腰上边的
             kkk2 += spdx
+    '''打砖块'''
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             print(kkk1,"@@@" ,kkk2)
             pygame.quit()
             sys.exit()
-        if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN:#加了分数air显示
             # 键盘有按下？
             if event.key == pygame.K_UP:
-                if dril1.rect.top > 550: spdy = -5
+                if dril1.rect.top > 550: spdy = -8
                 else:
                     for sp in collide_list2:
-                        if sp.rect.top > dril1.rect.top + 35 and dril1.rect.top < sp.rect.top: spdy = -5
+                        if sp.rect.top > dril1.rect.top + 35 and dril1.rect.top < sp.rect.top: spdy = -8
             if event.key == pygame.K_DOWN:
                 for sp in collide_list2:
                     if sp.rect.left<dril1.rect.left+16<sp.rect.left+50:
@@ -55,6 +69,10 @@ while True:
                             else:
                                 break
                         drillbrick(sp)
+                        text_fmt4 = my_font.render("SCORE:" + str(dril1.score), 1, (255, 255, 255))
+
+                        text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
+
                         spdy=0
                         break
             if event.key == pygame.K_LEFT:
@@ -73,6 +91,8 @@ while True:
                                 else:
                                     break
                             drillbrick(sp)
+                            text_fmt4 = my_font.render("SCORE:" + str(dril1.score), 1, (255, 255, 255))
+                            text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
                         break
             if event.key == pygame.K_RIGHT:
                 moveable = 1
@@ -90,32 +110,36 @@ while True:
                                 else:
                                     break
                             drillbrick(sp)
+                            text_fmt4 = my_font.render("SCORE:" + str(dril1.score), 1, (255, 255, 255))
+                            text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
                         break
     dril1.move(spdx,spdy)
     if spdy<0:
-        spdy += 0.1  # 跳跃减速
+        spdy += 0.4 # 跳跃减速
         for sp in collide_list2:
             if sp.rect.top+51>=dril1.rect.top>=sp.rect.top+44:
                 spdy=0
                 break
+    '''砖块融合消除'''
     mergebrick(tic)
     map1.brickGroup.update(tic)
     map1.brickGroup.draw(screen)
     screen.blit(dril1.image, dril1.rect)
-    text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
-    text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
+    '''右边信息栏'''
     text_fmt3 = my_font.render("LEVEL:" + str(dril1.level), 1, (255, 255, 255))
-    text_fmt4 = my_font.render("SCORE:" + str(dril1.score), 1, (255, 255, 255))
-    screen.blit(text_fmt,(560,100))
+    screen.blit(text_fmt, (560, 100))
     screen.blit(text_fmt2, (560, 200))
     screen.blit(text_fmt3, (560, 300))
     screen.blit(text_fmt4, (560, 400))
+    '''level'''
     if dril1.rect.top<560: dril1.update()
     levelup()
     pygame.display.update()
+    '''AIR'''
     if tic>=1:
         tic=0
         dril1.air-=1
+        text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
         print(dril1.air)
 
 
