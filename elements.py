@@ -2,11 +2,13 @@ import pygame
 import random
 import sys
 from pygame.font import *
+pygame.init()
 my_font = pygame.font.SysFont("arial", 40)
 if not pygame.font: print('Warning, fonts disabled')
 allblock=0
 meltgroup=[]
-BRICKG = [[]*40]
+BRICKG = [[] for i in range(40)]
+
 def foo(var):
     # red, blue, green or yellow普通
 
@@ -82,8 +84,6 @@ class Brick(pygame.sprite.Sprite):
                         if sss.rect.left <= dril1.rect.left + 16 <= sss.rect.left + 50:
                             dril1.life -= 1
                             dril1.air = 100
-                            text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
-                            text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
                             dril1.rect.top, dril1.rect.left = 200, 250
                             for br in map1.brickGroup:
                                 br.rect.top += dril1.level
@@ -93,19 +93,20 @@ class Brick(pygame.sprite.Sprite):
                 if (sss.rect.top+dril1.level) % 50 == 0:
                     kll = 1         # 下落到50倍数了
                 if kll:
+                    '''失败尝试
                     for sss in gg.mapn:
                         x=sss.rect.left//50
                         y=sss.rect.top//50
                         if y==0:continue
                         if BRICKG[y-1][x]==sss:
                             BRICKG[y - 1][x] = 0
-                        BRICKG[y][x] = sss
+                        BRICKG[y][x] = sss'''
                     gg.fallable=1#可判断是否下咯
                 return 0
             else:
                 fall123=1#融合在fall
                 for spr in gg.mapn:  # 组里的每一个石块
-                    '''原方案：
+                    '''原方案：'''
                     if spr.rect.top+25 < self.rect.top and spr.rect.left==self.rect.left: continue
                     test_list = pygame.sprite.spritecollide(spr, map1.brickGroup, False)  # spr相交的石块
                     for ll in test_list:  # 查看有没有托
@@ -113,28 +114,29 @@ class Brick(pygame.sprite.Sprite):
                             continue
                         if ll.rect.top >= spr.rect.top+50 and ll.rect.left == spr.rect.left:  # 掉不下去
                             return 0
-                            '''
+
+                    '''失败尝试
                     x=spr.rect.left//50
                     y = spr.rect.top//50
                     if y >= 39:continue
                     if BRICKG[y+1][x]:
                         if BRICKG[y+1][x].color == spr.color:continue
-                        else:return 0#掉不下去
+                        else:return 0#掉不下去'''
                 for sss in gg.mapn:
                     sss.rect.top += 2
                 gg.fallable = 0#没找到托，正在下落
                 gg.statu+=1
                 return 0
         #if融合
-        '''原单个、压住了:
+        '''原单个、压住了:'''
         collide_list = pygame.sprite.spritecollide(self, map1.brickGroup, False)
         for sp in collide_list:
             if  self.rect.left==sp.rect.left:
                 if sp.rect.top == self.rect.top + 50:#压住了
                     self.melt()
                     self.fallingsingle=1
-                    return 0'''
-        '''后。单个是否压住'''
+                    return 0
+        '''失败尝试。单个是否压住
         x = self.rect.left // 50
         y = self.rect.top // 50
         if self.rect.top%50==0 and self.fallingsingle==0:
@@ -148,14 +150,12 @@ class Brick(pygame.sprite.Sprite):
                         BRICKG[y - 1][x] =0
                 self.melt()
                 self.fallingsingle = 1
-                return 0
+                return 0'''
         if self.stoptime==0:
             if self.rect.top + 5 <= dril1.rect.top <= self.rect.top + 50:
                 if self.rect.left <= dril1.rect.left + 16 <= self.rect.left + 50:
                     dril1.life -= 1
                     dril1.air=100
-                    text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
-                    text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
                     dril1.rect.top, dril1.rect.left = 200, 250
                     for br in map1.brickGroup:
                         br.rect.top += dril1.level
@@ -216,6 +216,7 @@ class Map():
               # 生砖块的位置
               self.brick.rect.left,self.brick.rect.top=3+x*50,250+y*50# 每循环一次自动将动画添加到精灵组（下同）
               self.brickGroup.add(self.brick)
+              print(y)
               BRICKG[y].append(self.brick)
 class Drillers(pygame.sprite.Sprite):
     life=3
@@ -313,7 +314,6 @@ def mergebrick(tics):
             for yichu in spp.mapn:
                map1.brickGroup.remove(yichu)
             dril1.score += spp.num
-            text_fmt4 = my_font.render("SCORE:" + str(dril1.score), 1, (255, 255, 255))
             spp.mapn.empty  # 清空
             print(dril1.score)
             meltgroup.pop(ii)
@@ -353,7 +353,6 @@ def drillbrick(sp):
                     for yichu in gro.mapn:
                         map1.brickGroup.remove(yichu)
                     dril1.score += gro.num
-                    text_fmt4 = my_font.render("SCORE:" + str(dril1.score), 1, (255, 255, 255))
                     gro.mapn.empty  # 清空
                     print(dril1.score)
                     meltgroup.pop(ssss)

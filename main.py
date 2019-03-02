@@ -2,7 +2,6 @@ import pygame
 import sys
 from elements import *
 from pygame.locals import *
-pygame.init()
 screen = pygame.display.set_mode((800,600), 0, 32)
 pygame.display.set_caption("Mr Driller")
 framerate = pygame.time.Clock()
@@ -14,6 +13,7 @@ text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
 text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
 text_fmt3 = my_font.render("LEVEL:" + str(dril1.level), 1, (255, 255, 255))
 text_fmt4 = my_font.render("SCORE:" + str(dril1.score), 1, (255, 255, 255))
+lifen=str(dril1.life)
 while True:
     '''TIME'''
     timepassed = framerate.tick(60)
@@ -136,6 +136,11 @@ while True:
     levelup()
     pygame.display.update()
     '''AIR'''
+    if tic >= 0.2:
+        text_fmt4 = my_font.render("SCORE:" + str(dril1.score), 1, (255, 255, 255))
+        if str(dril1.life) != lifen:
+            text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
+            lifen = str(dril1.life)
     if tic>=1:
         tic=0
         dril1.air-=1
