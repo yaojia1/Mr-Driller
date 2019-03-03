@@ -52,7 +52,7 @@ class Brick(pygame.sprite.Sprite):
             if self.stoptime > 0:
                 self.ttime(tics)
                 return 0  # 两秒后stoptime=-0.1
-            if self.stoptime < 0:
+            if self.stoptime < 0 :
                 print("透明色消除")
                 drillbrick(self)
                 return 0
@@ -106,15 +106,23 @@ class Brick(pygame.sprite.Sprite):
             else:
                 fall123=1#融合在fall
                 for spr in gg.mapn:  # 组里的每一个石块
-                    '''原方案：'''
+                    '''原方案：
                     if spr.rect.top+25 < self.rect.top and spr.rect.left==self.rect.left: continue
                     test_list = pygame.sprite.spritecollide(spr, map1.brickGroup, False)  # spr相交的石块
                     for ll in test_list:  # 查看有没有托
                         if pygame.sprite.Group.has(gg.mapn, ll):
                             continue
                         if ll.rect.top >= spr.rect.top+50 and ll.rect.left == spr.rect.left:  # 掉不下去
+                            return 0'''
+                    '''第二次尝试'''
+                    if spr.rect.top + 25 < self.rect.top and spr.rect.left == self.rect.left: continue
+                    x=spr.rect.left//50
+                    test_list = pygame.sprite.spritecollide(spr, map1.line[x], False)  # spr相交的石块
+                    for ll in test_list:  # 查看有没有托
+                        if pygame.sprite.Group.has(gg.mapn, ll):
+                            continue
+                        if ll.rect.top >= spr.rect.top + 50 and ll.rect.left == spr.rect.left:  # 掉不下去
                             return 0
-
                     '''失败尝试
                     x=spr.rect.left//50
                     y = spr.rect.top//50
@@ -128,14 +136,23 @@ class Brick(pygame.sprite.Sprite):
                 gg.statu+=1
                 return 0
         #if融合
-        '''原单个、压住了:'''
+        '''第二次尝试成功了！！！'''
+        x=self.rect.left//50
+        collide_list = pygame.sprite.spritecollide(self, map1.line[x], False)
+        for sp in collide_list:
+            #if self.rect.left == sp.rect.left:
+                if sp.rect.top == self.rect.top + 50:  # 压住了
+                    self.melt()
+                    self.fallingsingle = 1
+                    return 0
+        '''原单个、压住了:
         collide_list = pygame.sprite.spritecollide(self, map1.brickGroup, False)
         for sp in collide_list:
             if  self.rect.left==sp.rect.left:
                 if sp.rect.top == self.rect.top + 50:#压住了
                     self.melt()
                     self.fallingsingle=1
-                    return 0
+                    return 0'''
         '''失败尝试。单个是否压住
         x = self.rect.left // 50
         y = self.rect.top // 50
@@ -210,14 +227,18 @@ class Map():
       self.brickGroup=pygame.sprite.Group()
 
       XY = [(x,y) for x in range(11) for y in range(40)]#53，206
+      '''第二次尝试'''
+      self.line=[]
+      for i in range(11):
+          nn=pygame.sprite.Group()
+          self.line.append(nn)
       for x,y in XY:
               # 实例化砖块类对象
               self.brick=Brick(random.choice(['red','blue','green','yellow','brown','white','crystal','air']))
               # 生砖块的位置
               self.brick.rect.left,self.brick.rect.top=3+x*50,250+y*50# 每循环一次自动将动画添加到精灵组（下同）
               self.brickGroup.add(self.brick)
-              print(y)
-              BRICKG[y].append(self.brick)
+              self.line[x].add(self.brick)
 class Drillers(pygame.sprite.Sprite):
     life=3
     level=0
@@ -234,7 +255,11 @@ class Drillers(pygame.sprite.Sprite):
         self.rect.left+=speedx
         self.rect.top+=speedy
     def fall(self):#修改
-        collide_list = pygame.sprite.spritecollide(self, map1.brickGroup, False)
+        '''第二次尝试'''
+        xx=(self.rect.left-3)//50
+        collide_list = pygame.sprite.spritecollide(self, map1.line[xx], False)
+        '''原
+        collide_list = pygame.sprite.spritecollide(self, map1.brickGroup, False)'''
         self.speed=2
         for sp in collide_list:
             if self.rect.top+38<=sp.rect.top<=self.rect.top+41 :#下接触了
@@ -242,6 +267,15 @@ class Drillers(pygame.sprite.Sprite):
                     self.rect.top=sp.rect.top-39
                     self.speed=0
                     return 0
+        xx2 = (self.rect.left +29) // 50
+        if xx2!=xx:
+            collide_list2 = pygame.sprite.spritecollide(self, map1.line[xx2], False)
+            for sp in collide_list2:
+                if self.rect.top + 38 <= sp.rect.top <= self.rect.top + 41:  # 下接触了
+                    if sp.rect.left - 32 < self.rect.left < sp.rect.left + 50:
+                        self.rect.top = sp.rect.top - 39
+                        self.speed = 0
+                        return 0
             #else:
              #   if sp.rect.left + 50 > self.rect.left > sp.rect.left + 25: self.rect.left = sp.rect.left  # 排左
               #  if sp.rect.left < self.rect.left + 32 < sp.rect.left + 25: self.rect.left = sp.rect.left - 32  # 排右
@@ -307,12 +341,15 @@ def mergebrick(tics):
             if spp.color == "crystal" :
                 for bbb in spp.mapn:
                     if bbb.mel!=1:
-                        if bbb.stoptime!=0:pass
-                        else:
-                            bbb.stoptime=2.5
+                        if bbb.stoptime<0:pass
+                        else :
+                            if bbb.stoptime==0:bbb.stoptime=2.5
                             print("透明色数量：", spp.num)
+                            continue
             for yichu in spp.mapn:
-               map1.brickGroup.remove(yichu)
+                map1.brickGroup.remove(yichu)
+                x = yichu.rect.left//50
+                map1.line[x].remove(yichu)
             dril1.score += spp.num
             spp.mapn.empty  # 清空
             print(dril1.score)
@@ -352,6 +389,8 @@ def drillbrick(sp):
                         dril1.air += 20 * gro.num
                     for yichu in gro.mapn:
                         map1.brickGroup.remove(yichu)
+                        x = yichu.rect.left // 50
+                        map1.line[x].remove(yichu)#第二次尝试
                     dril1.score += gro.num
                     gro.mapn.empty  # 清空
                     print(dril1.score)
@@ -361,6 +400,8 @@ def drillbrick(sp):
         if sp.color=="air":
             dril1.air+=20
         map1.brickGroup.remove(sp)
+        x = sp.rect.left//50
+        map1.line[x].remove(sp)
 
 def levelup():
     if dril1.rect.top>=310:
