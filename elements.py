@@ -342,17 +342,16 @@ def mergebrick(tics):
                             spp.aadd(jiaocha)
         if spp.num >= 4:  # 大于4
             # if spp.statu == 0: continue
+            ''''''
             if spp.color == "crystal" :
-                nani=0
                 for bbb in spp.mapn:
                     if bbb.mel!=1:
-                        if bbb.stoptime<0:pass
+                        if bbb.stoptime<0:drillbrick(bbb)
                         else :
                             if bbb.stoptime==0:bbb.stoptime=2.5
-                            nani=1
                         break
-                if nani:
-                    continue
+                ii+=1
+                continue
             dril1.score += spp.num
             for yichu in spp.mapn:
                 map1.brickGroup.remove(yichu)
