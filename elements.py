@@ -243,6 +243,7 @@ class Drillers(pygame.sprite.Sprite):
     life=3
     level=0
     air=100
+    levelwin=1
     image = pygame.image.load(foo('drill'))
     rect = image.get_rect()
     score=0
@@ -284,7 +285,10 @@ class Drillers(pygame.sprite.Sprite):
         self.rect.top+=self.speed
     def update(self):
         self.fall()
-        if self.rect.top+self.level>=2210:print("WIN")
+        #if self.rect.top+self.level>=2210:print("WIN")
+        if self.score>=100:
+            self.levelwin+=1
+            self.score-=100
 
     #def dill(self)#棕色的氧气减20%
     #def collect(self):#air+20%
@@ -339,18 +343,21 @@ def mergebrick(tics):
         if spp.num >= 4:  # 大于4
             # if spp.statu == 0: continue
             if spp.color == "crystal" :
+                nani=0
                 for bbb in spp.mapn:
                     if bbb.mel!=1:
                         if bbb.stoptime<0:pass
                         else :
                             if bbb.stoptime==0:bbb.stoptime=2.5
-                            print("透明色数量：", spp.num)
-                            continue
+                            nani=1
+                        break
+                if nani:
+                    continue
+            dril1.score += spp.num
             for yichu in spp.mapn:
                 map1.brickGroup.remove(yichu)
                 x = yichu.rect.left//50
                 map1.line[x].remove(yichu)
-            dril1.score += spp.num
             spp.mapn.empty  # 清空
             print(dril1.score)
             meltgroup.pop(ii)
@@ -385,13 +392,13 @@ def drillbrick(sp):
             ssss = 0
             for gro in meltgroup:
                 if pygame.sprite.Group.has(gro.mapn, sp):
+                    dril1.score += gro.num
                     if sp.color == "air":
                         dril1.air += 20 * gro.num
                     for yichu in gro.mapn:
                         map1.brickGroup.remove(yichu)
                         x = yichu.rect.left // 50
                         map1.line[x].remove(yichu)#第二次尝试
-                    dril1.score += gro.num
                     gro.mapn.empty  # 清空
                     print(dril1.score)
                     meltgroup.pop(ssss)
@@ -399,6 +406,7 @@ def drillbrick(sp):
                 ssss += 1
         if sp.color=="air":
             dril1.air+=20
+        dril1.score+=1
         map1.brickGroup.remove(sp)
         x = sp.rect.left//50
         map1.line[x].remove(sp)

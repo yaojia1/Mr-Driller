@@ -11,7 +11,7 @@ kkk1,kkk2=0,0
 moveable=1
 text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
 text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
-text_fmt3 = my_font.render("LEVEL:" + str(dril1.level), 1, (255, 255, 255))
+text_fmt3 = my_font.render("LEVEL:" + str(dril1.levelwin), 1, (255, 255, 255))
 text_fmt4 = my_font.render("SCORE:" + str(dril1.score), 1, (255, 255, 255))
 lifen=str(dril1.life)
 while True:
@@ -55,10 +55,10 @@ while True:
         if event.type == pygame.KEYDOWN:#加了分数air显示
             # 键盘有按下？
             if event.key == pygame.K_UP:
-                if dril1.rect.top > 550: spdy = -8
+                if dril1.rect.top > 550: spdy = -6
                 else:
                     for sp in collide_list2:
-                        if sp.rect.top > dril1.rect.top + 35 and dril1.rect.top < sp.rect.top: spdy = -8
+                        if sp.rect.top > dril1.rect.top + 35 and dril1.rect.top < sp.rect.top: spdy = -6
             if event.key == pygame.K_DOWN:
                 for sp in collide_list2:
                     if sp.rect.left<dril1.rect.left+16<sp.rect.left+50:
@@ -115,9 +115,9 @@ while True:
                         break
     dril1.move(spdx,spdy)
     if spdy<0:
-        spdy += 0.4 # 跳跃减速
+        spdy += 0.2 # 跳跃减速
         for sp in collide_list2:
-            if sp.rect.top+51>=dril1.rect.top>=sp.rect.top+44:
+            if sp.rect.top+51>=dril1.rect.top>=sp.rect.top+25:
                 spdy=0
                 break
     '''砖块融合消除'''
@@ -126,7 +126,6 @@ while True:
     map1.brickGroup.draw(screen)
     screen.blit(dril1.image, dril1.rect)
     '''右边信息栏'''
-    text_fmt3 = my_font.render("LEVEL:" + str(dril1.level), 1, (255, 255, 255))
     screen.blit(text_fmt, (560, 100))
     screen.blit(text_fmt2, (560, 200))
     screen.blit(text_fmt3, (560, 300))
@@ -137,6 +136,7 @@ while True:
     pygame.display.update()
     '''AIR'''
     if tic >= 0.2:
+        text_fmt3 = my_font.render("LEVEL:" + str(dril1.levelwin), 1, (255, 255, 255))
         text_fmt4 = my_font.render("SCORE:" + str(dril1.score), 1, (255, 255, 255))
         if str(dril1.life) != lifen:
             text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
