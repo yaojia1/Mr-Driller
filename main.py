@@ -22,11 +22,14 @@ text_fmtlose = my_font.render("YOU LOSE", 5, (255, 255, 255))
 text_fmtpause = my_font.render("PAUSE", 2, (255, 255, 255))
 lifen=str(dril1.life)
 pause=0
+
 while True:
     '''TIME'''
-    timepassed = framerate.tick(30)
+    timepassed = framerate.tick(35)
     tic += timepassed / 1000
     screen.fill((0, 0, 0))
+    '''开始界面'''
+
     '''background'''
     rect2.y =dril1.level+40
     if rect2.y>900:rect2.y=dril1.level+40-900
@@ -57,6 +60,7 @@ while True:
         screen.blit(text_fmtlose, (250, 250))
         pygame.display.update()
         continue
+    '''win界面需要高分榜'''
     if dril1.levelwin>=10:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
