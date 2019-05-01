@@ -1,0 +1,39 @@
+
+
+main：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：
+
+spdy：小人下落的y方向的速度
+rect：背景是流动的
+level：人的海拔
+背景图
+pause：1：暂停
+判断列x
+pygame精灵
+
+中间：collide_listm砖块那一列
+左边：collide_listl
+右边：collide_listr
+stoptime：2.****负数判断
+
+move：万有引力：跳得越来越慢
+
+同颜色一起消：update
+
+
+main：
+收集列表
+判断左右移动
+moveable：打砖块：0
+
+class：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：
+
+class brick：小砖块          class meltgroupadd：消除所有颜色的一个组
+class map：画面上所有的砖块：init：生成所有的砖块
+class drillers：打砖块的小人
+
+function：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：
+
+foo：自动生成砖块
+mergebrick:形成组里的砖块：>4:砖块可以消掉;<4的时候不可以消掉
+drillbrick
+levelup
