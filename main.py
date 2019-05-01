@@ -1,5 +1,6 @@
 import pygame
 import sys
+from pages import *
 from elements import *
 from pygame.locals import *
 screen = pygame.display.set_mode((800,600), 0, 32)
@@ -23,6 +24,7 @@ text_fmtpause = my_font.render("PAUSE", 2, (255, 255, 255))
 lifen=str(dril1.life)
 pause=0
 
+startpage(screen,0,0,0,0)
 while True:
     '''TIME'''
     timepassed = framerate.tick(35)
@@ -43,6 +45,7 @@ while True:
         text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
     '''输赢，暂未成功'''
     if dril1.life==0:
+        endpage(screen, 0, 0, 0, 0, 0, 0, 0, dril1.score)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 print(kkk1, "@@@", kkk2)
