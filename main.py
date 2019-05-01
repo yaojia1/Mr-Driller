@@ -24,14 +24,13 @@ text_fmtpause = my_font.render("PAUSE", 2, (255, 255, 255))
 lifen=str(dril1.life)
 pause=0
 
-startpage(screen,0,0,0,0)
+startpage(screen, 0, 0, 0, 0)
 while True:
     '''TIME'''
     timepassed = framerate.tick(35)
     tic += timepassed / 1000
     screen.fill((0, 0, 0))
     '''开始界面'''
-
     '''background'''
     rect2.y =dril1.level+40
     if rect2.y>900:rect2.y=dril1.level+40-900
@@ -45,7 +44,7 @@ while True:
         text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
     '''输赢，暂未成功'''
     if dril1.life==0:
-        endpage(screen, 0, 0, 0, 0, 0, 0, 0, dril1.score)
+        endpage2(screen)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 print(kkk1, "@@@", kkk2)
@@ -65,6 +64,7 @@ while True:
         continue
     '''win界面需要高分榜'''
     if dril1.levelwin>=10:
+        endpage1(screen, 0, 0, 0, 0, 0, 0, 0, dril1.score)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 print(kkk1, "@@@", kkk2)

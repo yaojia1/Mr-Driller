@@ -30,19 +30,30 @@ text_up=my_font.render("JUMP",5,(0,0,0))
 text_down=my_font.render("Drill Down",5,(0,0,0))
 text_left=my_font.render("Drill Left",5,(0,0,0))
 text_right=my_font.render("Drill Right",5,(0,0,0))
+text_end2=my_font.render("YOU LOSE  o(╥﹏╥)o",5,(255,255,255))
+text_crystal=my_font.render("After dig it, it takes",5,(0,0,0))
+text_crystal2=my_font.render("3s for it to disappear",5,(0,0,0))
+text_brown=my_font.render("Consume twenty ",5,(0,0,0))
+text_brown2=my_font.render("players'air",5,(0,0,0))
+text_air=my_font.render("Get 20 air",5,(0,0,0))
 startback = pygame.image.load("startback.jpg")
 helpback = pygame.image.load("helpback.jpg")
 turn_right=pygame.image.load("right1.jpg")
 turn_left=pygame.image.load("left.jpg")
 turn_up=pygame.image.load("up.jpg")
 turn_down=pygame.image.load("down.jpg")
+crystal=pygame.image.load("crystal.jpg")
+brown=pygame.image.load("brown.png")
+air=pygame.image.load("air.png")
 start = pygame.Surface(screen.get_size())
 start= start.convert()
 help_page = pygame.Surface(screen.get_size())
 help_page = help_page.convert()
 help_page.fill(color=(0,0,0))
-end = pygame.Surface(screen.get_size())
-end = end.convert()
+end1 = pygame.Surface(screen.get_size())
+end1 = end1.convert()
+end2 = pygame.Surface(screen.get_size())
+end2 = end2.convert()
 
 
 
@@ -95,6 +106,14 @@ def startpage(screen,x,y,event,f):
                     help_page.blit(turn_right, (100, 330))
                     help_page.blit(text_right, (200, 330))
                     help_page.blit(text_back,(380,455))
+                    help_page.blit(air, (400, 150))
+                    help_page.blit(text_air, (500, 150))
+                    help_page.blit(brown, (400, 210))
+                    help_page.blit(text_brown, (500, 210))
+                    help_page.blit(text_brown2, (500, 270))
+                    help_page.blit(crystal, (400, 330))
+                    help_page.blit(text_crystal, (500, 330))
+                    help_page.blit(text_crystal2, (500, 390))
                     screen.blit(help_page, (0, 0))
                     pygame.display.update()
                     f=1
@@ -104,20 +123,20 @@ def startpage(screen,x,y,event,f):
                     return 0
 
     '''你可以设置几个参数加到参数栏来判断点击状态，因为这是个游戏循环会不停的调用这个函数'''
-def endpage(screen,x,y,event,m,n,i,p,uscore1):
+def endpage1(screen,x,y,event,m,n,i,p,uscore1):
     dict={}
     l=[]
     names=""
     uscore2 = my_font.render(str(uscore1), 2, (255, 255, 255))
-    end.fill((0,0,0))
-    end.blit(text_end,(300,60))
-    end.blit(text_ask, (100, 350))
-    end.blit(text_score,(200,200))
-    end.blit(uscore2, (400, 200))
-    pygame.draw.rect(end, (100, 100, 100), (370, 450, 100, 60), 0)
-    pygame.draw.rect(end,(255,255,255),(450,350,300,50),0)
-    end.blit(text_putin, (380, 455))
-    screen.blit(end, (0, 0))
+    end1.fill((0,0,0))
+    end1.blit(text_end,(300,60))
+    end1.blit(text_ask, (100, 350))
+    end1.blit(text_score,(200,200))
+    end1.blit(uscore2, (400, 200))
+    pygame.draw.rect(end1, (100, 100, 100), (370, 450, 100, 60), 0)
+    pygame.draw.rect(end1,(255,255,255),(450,350,300,50),0)
+    end1.blit(text_putin, (380, 455))
+    screen.blit(end1, (0, 0))
     pygame.display.update()
     while True:
         for event in pygame.event.get():
@@ -127,10 +146,10 @@ def endpage(screen,x,y,event,m,n,i,p,uscore1):
             if event.type == pygame.KEYDOWN:#input name
                 inkey = chr(event.key)
                 name = my_font.render(inkey, 2, (0, 0, 0))
-                end.blit(name,(455+20*n,355))
+                end1.blit(name,(455+20*n,355))
                 n += 1
                 names+=str(inkey)
-                screen.blit(end, (0, 0))
+                screen.blit(end1, (0, 0))
                 pygame.display.update()
                 if event.key == K_BACKSPACE:
                     pass#can not delete
@@ -138,11 +157,11 @@ def endpage(screen,x,y,event,m,n,i,p,uscore1):
                 x, y = event.pos
                 if x>=370 and x<=470 and y>=450 and y<=510:
                     save(names, uscore1)
-                    end.__init__(screen.get_size())
-                    end.fill((0,0,0))
-                    end.blit(text_list,(300,60))
-                    end.blit(text_name, (400, 150 + i * 50))
-                    end.blit(text_score1, (550, 150 + i * 50))
+                    end1.__init__(screen.get_size())
+                    end1.fill((0,0,0))
+                    end1.blit(text_list,(300,60))
+                    end1.blit(text_name, (400, 150 + i * 50))
+                    end1.blit(text_score1, (550, 150 + i * 50))
                     f = open('saveFile.txt', "r+")
                     dict = eval(f.read())
                     f.close()
@@ -161,9 +180,9 @@ def endpage(screen,x,y,event,m,n,i,p,uscore1):
                                 nam = my_font.render(key[k] , 2,(255, 255, 255))
                                 sco = my_font.render(repr(dict[key[k]]), 2,(255, 255, 255))
                                 m+=1
-                                end.blit(num, (250, 150 + (i+1) * 50))
-                                end.blit(nam, (400, 150 + (i+1) * 50))
-                                end.blit(sco, (550, 150 + (i+1) * 50))
+                                end1.blit(num, (250, 150 + (i+1) * 50))
+                                end1.blit(nam, (400, 150 + (i+1) * 50))
+                                end1.blit(sco, (550, 150 + (i+1) * 50))
                         key.remove(key[k])
                         i+=1
                     print(l)
@@ -173,12 +192,25 @@ def endpage(screen,x,y,event,m,n,i,p,uscore1):
                             unum= my_font.render("No." + repr(p+1), 2, (255, 255, 255))
                             uname=my_font.render(l[p], 2, (255, 255, 255))
                             uscore=my_font.render(repr(dict[l[p]]), 2, (255, 255, 255))
-                            end.blit(you, (100, 450))
-                            end.blit(unum, (250, 450))
-                            end.blit(uname, (400, 450))
-                            end.blit(uscore, (550, 450))
-                            screen.blit(end, (0, 0))
+                            end1.blit(you, (100, 450))
+                            end1.blit(unum, (250, 450))
+                            end1.blit(uname, (400, 450))
+                            end1.blit(uscore, (550, 450))
+                            screen.blit(end1, (0, 0))
                             pygame.display.update()
+def endpage2(screen):
+    end2.fill((0, 0, 0))
+    end2.blit(text_end2,(300,300))
+    screen.blit(end2, (0, 0))
+    pygame.display.update()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+
+
 
 
     '''输入姓名'''
