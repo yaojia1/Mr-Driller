@@ -23,7 +23,7 @@ def foo(var):
         'white':"white.png",
         'crystal':"crystal.jpg",
         'air':"air.png",
-        'drill':"drille.png"
+        'drill':"driller.png"
     }.get(var,'error')
 
 class Brick(pygame.sprite.Sprite):
