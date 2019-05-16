@@ -8,7 +8,8 @@ if not pygame.font: print('Warning, fonts disabled')
 allblock=0
 meltgroup=[]
 BRICKG = [[] for i in range(40)]
-
+screen = pygame.display.set_mode((800,600), 0, 32)
+pygame.display.set_caption("Mr Driller")
 def foo(var):
     # red, blue, green or yellow普通
 
@@ -22,7 +23,7 @@ def foo(var):
         'white':"white.png",
         'crystal':"crystal.jpg",
         'air':"air.png",
-        'drill':"driller.png"
+        'drill':"drille.png"
     }.get(var,'error')
 
 class Brick(pygame.sprite.Sprite):
@@ -36,13 +37,14 @@ class Brick(pygame.sprite.Sprite):
         if tics>=1:
             self.stoptime-=1
     def __init__(self,putimage):
-        super().__init__()#调用父类的初始化方法
+        pygame.sprite.Sprite.__init__(self)
+        #super().__init__()#调用父类的初始化方法
         self.mel=0
         global allblock
         allblock+=1
         #随机判断放哪一个图，标记序数得到iimage
         self.color=putimage#一个数，一会修改
-        self.image = pygame.image.load(foo(putimage))#写一个函数判断放哪一个图片
+        self.image = pygame.image.load(foo(putimage)).convert_alpha()#写一个函数判断放哪一个图片
         self.rect = self.image.get_rect()
         if putimage=="brown":
             self.life=5
@@ -233,12 +235,13 @@ class Map():
           self.brickGroup.add(self.brick)
           self.line[x].add(self.brick)
           ss+=1
+
 class Drillers(pygame.sprite.Sprite):
     life=3
     level=0#depth
     air=100
     levelwin=1
-    image = pygame.image.load(foo('drill'))
+    image = pygame.image.load(foo('drill')).convert_alpha()
     rect = image.get_rect()
     score=0
 
@@ -349,6 +352,7 @@ def mergebrick(tics):
                 continue
             dril1.score += spp.num
             for yichu in spp.mapn:
+                #yichu.kill
                 map1.brickGroup.remove(yichu)
                 x = yichu.rect.left//50
                 map1.line[x].remove(yichu)
@@ -372,10 +376,13 @@ def drillbrick(sp):
                         dril1.air += 20 * gro.num
                         if dril1.air>100:dril1.air=100
                     for yichu in gro.mapn:
+                        pygame.sprite.Sprite.kill(yichu)
+                        del yichu
+                        """
                         map1.brickGroup.remove(yichu)
                         x = yichu.rect.left // 50
                         map1.line[x].remove(yichu)#第二次尝试
-                    gro.mapn.empty  # 清空
+                    gro.mapn.empty  # 清空"""
                     print(dril1.score)
                     meltgroup.pop(ssss)
                     return 0
@@ -384,9 +391,12 @@ def drillbrick(sp):
             dril1.air+=20
             if dril1.air>100:dril1.air=100
         dril1.score+=1
+
+        pygame.sprite.Sprite.kill(sp)
+        """
         map1.brickGroup.remove(sp)
         x = sp.rect.left//50
-        map1.line[x].remove(sp)
+        map1.line[x].remove(sp)"""
 
 def levelup():
     if dril1.rect.top>=310:

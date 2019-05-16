@@ -3,8 +3,8 @@ import sys
 from pages import *
 from elements import *
 from pygame.locals import *
-screen = pygame.display.set_mode((800,600), 0, 32)
-pygame.display.set_caption("Mr Driller")
+
+
 framerate = pygame.time.Clock()
 spdy = 0
 tic=0
@@ -46,23 +46,26 @@ while True:
     '''输赢，暂未成功'''
     if dril1.life==0:
         endpage(screen, 0, 0, 0, 0, 0, 0, 0, dril1.score)
+        continue
+        '''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 print(kkk1, "@@@", kkk2)
                 pygame.quit()
                 sys.exit()
         screen.fill((0, 0, 0))
-        '''画砖块，人'''
+        #画砖块，人
         map1.brickGroup.draw(screen)
         screen.blit(dril1.image, dril1.rect)
-        '''右边信息栏'''
+        #右边信息栏
         screen.blit(text_fmt, (600, 100))
         screen.blit(text_fmt2, (600, 200))
         screen.blit(text_fmt3, (600, 300))
         screen.blit(text_fmt4, (600, 400))
         screen.blit(text_fmtlose, (250, 250))
         pygame.display.update()
-        continue
+        continue'''
+
     '''win界面需要高分榜'''
     if dril1.levelwin>=10:
         for event in pygame.event.get():
