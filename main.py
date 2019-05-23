@@ -44,12 +44,7 @@ while True:
         text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
     '''输赢，暂未成功'''
     if dril1.life==0:
-<<<<<<< HEAD
         endpage2(screen)
-=======
-#<<<<<<< HEAD
-        endpage(screen, 0, 0, 0, 0, 0, 0, 0, dril1.score)
->>>>>>> a28e2233e2665f400a009090aee8c8d34228ee51
         continue
         '''
 =======
