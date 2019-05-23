@@ -69,7 +69,7 @@ while True:
         continue'''
 
     '''win界面需要高分榜'''
-    if dril1.levelwin>=1:
+    if dril1.levelwin>=11:
         endpage1(screen, 0, 0, 0, 0, 0, 0, 0, dril1.score)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
