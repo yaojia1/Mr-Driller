@@ -1,18 +1,21 @@
 #for祝宝宝
 import pygame
-import random
+#import random
 import sys
 import json
-import string
-from elements import *
-from pygame.font import *
-from pygame.locals import *
-
+#import string
+#from elements import *
+#from pygame.font import *
+#from pygame.locals import *
 pygame.init()
 screen = pygame.display.set_mode((800,600),0,32)
 pygame.display.set_caption("Mr Driller")
 framerate = pygame.time.Clock()
 tic =0
+
+
+
+
 my_font = pygame.font.SysFont("arial", 40)
 
 text_start = my_font.render("Start", 3, (255, 255, 255))
@@ -36,15 +39,15 @@ text_crystal2=my_font.render("3s for it to disappear",5,(0,0,0))
 text_brown=my_font.render("Consume twenty ",5,(0,0,0))
 text_brown2=my_font.render("players'air",5,(0,0,0))
 text_air=my_font.render("Get 20 air",5,(0,0,0))
-startback = pygame.image.load("startback.jpg")
-helpback = pygame.image.load("helpback.jpg")
-turn_right=pygame.image.load("right1.jpg")
-turn_left=pygame.image.load("left.jpg")
-turn_up=pygame.image.load("up.jpg")
-turn_down=pygame.image.load("down.jpg")
-crystal=pygame.image.load("crystal.jpg")
-brown=pygame.image.load("brown.png")
-air=pygame.image.load("air.png")
+startback = pygame.image.load("/pic/startback.jpg")
+helpback = pygame.image.load("/pic/helpback.jpg")
+turn_right=pygame.image.load("/pic/right1.jpg")
+turn_left=pygame.image.load("/pic/left.jpg")
+turn_up=pygame.image.load("/pic/up.jpg")
+turn_down=pygame.image.load("/pic/down.jpg")
+crystal=pygame.image.load("/pic/crystal1.png")
+brown=pygame.image.load("/pic/brown1.png")
+air=pygame.image.load("/pic/air.png")
 start = pygame.Surface(screen.get_size())
 start= start.convert()
 help_page = pygame.Surface(screen.get_size())
@@ -58,7 +61,7 @@ end2 = end2.convert()
 
 
 def save(name,score):
-    f=open('saveFile.txt', "r+")
+    f=open('/dict/saveFile.txt', "r+")
     dic=f.read()
     dict=json.loads(dic)
     f.close()
@@ -66,7 +69,7 @@ def save(name,score):
     dict[name]=score
     dic= json.dumps(dict)
     print(dict)
-    f = open('saveFile.txt', "w+")
+    f = open('/dict/saveFile.txt', "w+")
     f.write(dic)
     f.close()
 
@@ -162,7 +165,7 @@ def endpage1(screen,x,y,event,m,n,i,p,uscore1):
                     end1.blit(text_list,(300,60))
                     end1.blit(text_name, (400, 150 + i * 50))
                     end1.blit(text_score1, (550, 150 + i * 50))
-                    f = open('saveFile.txt', "r+")
+                    f = open('/dict/saveFile.txt', "r+")
                     dict = eval(f.read())
                     f.close()
                     pygame.display.update()

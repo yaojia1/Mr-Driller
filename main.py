@@ -1,8 +1,9 @@
-import pygame
-import sys
+#import pygame
+#import sys
 from pages import *
 from elements import *
-from pygame.locals import *
+
+#from pygame.locals import *
 
 
 framerate = pygame.time.Clock()
@@ -10,7 +11,7 @@ spdy = 0
 tic=0
 kkk1,kkk2=0,0
 moveable=1
-backimage = pygame.image.load("th.jpg")
+backimage = pygame.image.load("th3.jpg")
 rect = backimage.get_rect()
 rect2 = pygame.Rect(0,0,rect.width ,rect.height)
 rightimage=pygame.image.load("right.jpg")
@@ -24,6 +25,12 @@ text_fmtpause = my_font.render("PAUSE", 2, (255, 255, 255))
 lifen=str(dril1.life)
 pause=0
 
+"""music"""
+pygame.mixer.init()
+pygame.mixer.music.load("backmusic2.mp3")
+
+pygame.mixer.music.play()
+
 startpage(screen, 0, 0, 0, 0)
 while True:
     '''TIME'''
@@ -32,8 +39,12 @@ while True:
     screen.fill((0, 0, 0))
     '''开始界面'''
     '''background'''
+    #if pygame.mixer.music.get_busy() == False:
+     #   pass
+        #pygame.mixer.music.play()
     rect2.y =dril1.level+40
-    if rect2.y>900:rect2.y=dril1.level+40-900
+    if rect2.y>700:rect2.y=dril1.level+40-700
+    elif rect2.y>50:screen.blit(backimage,(0,0),(0,rect2.y-740,rect2.width ,rect2.height))
     screen.blit(backimage,(0,0),rect2)#背景图的移动
     screen.blit(rightimage, (555, 0))
     '''DIE'''
@@ -44,33 +55,13 @@ while True:
         text_fmt2 = my_font.render("LIFE:" + str(dril1.life), 1, (255, 255, 255))
     '''输赢，暂未成功'''
     if dril1.life==0:
-#<<<<<<< HEAD
-        endpage(screen, 0, 0, 0, 0, 0, 0, 0, dril1.score)
-        continue
-        '''
-=======
+        pygame.mixer.music.stop()
         endpage2(screen)
->>>>>>> c24a1bca92f4c3f4c0608fb1e4a72a27c3f215d7
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                print(kkk1, "@@@", kkk2)
-                pygame.quit()
-                sys.exit()
-        screen.fill((0, 0, 0))
-        #画砖块，人
-        map1.brickGroup.draw(screen)
-        screen.blit(dril1.image, dril1.rect)
-        #右边信息栏
-        screen.blit(text_fmt, (600, 100))
-        screen.blit(text_fmt2, (600, 200))
-        screen.blit(text_fmt3, (600, 300))
-        screen.blit(text_fmt4, (600, 400))
-        screen.blit(text_fmtlose, (250, 250))
-        pygame.display.update()
-        continue'''
+        continue
 
     '''win界面需要高分榜'''
     if dril1.levelwin>=10:
+        pygame.mixer.music.stop()
         endpage1(screen, 0, 0, 0, 0, 0, 0, 0, dril1.score)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -279,4 +270,5 @@ while True:
         tic=0
         dril1.air-=1
         text_fmt = my_font.render("AIR:" + str(dril1.air), 1, (255, 255, 255))
-        print(dril1.air)
+        if pygame.mixer.music.get_busy() == False:
+            pygame.mixer.music.play()

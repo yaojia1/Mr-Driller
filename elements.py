@@ -1,4 +1,4 @@
-import pygame
+import pygame.sprite
 import random
 #import sys
 from pygame.font import *
@@ -10,20 +10,23 @@ meltgroup=[]
 BRICKG = [[] for i in range(40)]
 screen = pygame.display.set_mode((800,600), 0, 32)
 pygame.display.set_caption("Mr Driller")
+"""music"""
+
+
 def foo(var):
     # red, blue, green or yellow普通
 
     # brown,white, crystal
     return {
-        'red':"red.png",
-        'blue': "blue.png",
-        'green': "green.png",
-        'yellow':"yellow.png",
-        'brown':"brown.png",
-        'white':"white.png",
-        'crystal':"crystal.jpg",
-        'air':"air.png",
-        'drill':"driller.png"
+        'red':"/pic/red1.png",
+        'blue': "/pic/blue1.png",
+        'green': "/pic/green1.png",
+        'yellow':"/pic/yellow1.png",
+        'brown':"/pic/brown1.png",
+        'white':"/pic/white1.png",
+        'crystal':"/pic/crystal1.png",
+        'air':"/pic/air.png",
+        'drill':"/pic/driller.png"
     }.get(var,'error')
 
 class Brick(pygame.sprite.Sprite):
@@ -75,6 +78,8 @@ class Brick(pygame.sprite.Sprite):
                     else:
                         self.mel.fuck = 1
                         return 0
+            else:
+                self.melt()
             return 0#单个的
         #if self.fuck==1:return 0 #到底了
         if self.mel:#if 融合了
