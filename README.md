@@ -89,9 +89,9 @@ Need to import the pygame.fontNeed to import the **pygame.font** module and init
 ### 游戏工作流程
 ![image](https://github.com/yaojia1/Mr-Driller/IMG/workfolw.png)
 ### 代码结构
-![image](https://github.com/yaojia1/Mr-Drille/IMG/structure.png)
+![image](https://github.com/yaojia1/Mr-Driller/IMG/structure.png)
 ### 主引擎工作流程
-![image](https://github.com/yaojia1/Mr-Drille/IMG/engine.png)
+![image](https://github.com/yaojia1/Mr-Driller/IMG/engine.png)
 ### 内容介绍
 The following introduction to functions is to classify functions according to different
 documents.
