@@ -87,11 +87,11 @@ Need to import the pygame.fontNeed to import the **pygame.font** module and init
 ◆ json.dumps: Used to encode Python objects into JSON strings<br>
 4. random
 ### 游戏工作流程
-![image](https://github.com/yaojia1/Mr-Driller/IMG/workfolw.png)
+![image](https://github.com/yaojia1/Mr-Driller/tree/master/IMG/workfolw.png)
 ### 代码结构
-![image](https://github.com/yaojia1/Mr-Driller/IMG/structure.png)
+![image](https://github.com/yaojia1/Mr-Driller/tree/master/IMG/structure.png)
 ### 主引擎工作流程
-![image](https://github.com/yaojia1/Mr-Driller/IMG/engine.png)
+![image](https://github.com/yaojia1/Mr-Driller/tree/master/IMG/engine.png)
 ### 内容介绍
 The following introduction to functions is to classify functions according to different
 documents.
